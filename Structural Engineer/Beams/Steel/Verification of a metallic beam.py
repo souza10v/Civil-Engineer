@@ -162,7 +162,7 @@ bf=float(input("Insert the width of flange [bf(mm)]:"))
 tf=float(input("Insert the thickness of flange [tf(mm)]:"))
 hw=float(input("Insert the width of web [hw(mm)]:"))
 tw=float(input("Insert thethickness of web [tw or to(mm)]:"))
-inertia=float(1input("Insert the moment of inertia [I(cm^4)]: ")) 
+inertia=float(input("Insert the moment of inertia [I(cm^4)]: ")) 
 print(" ")
 
 # 1.4: LOAD FACTORS
