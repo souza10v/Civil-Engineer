@@ -17,96 +17,96 @@
 ################################################################################
 
 def FLANGE_LOCAL_BUCKLING(BF,TF,YOUNG_MODULUS,FY):  #Flambagem local na mesa FLB. Considerando aços de maneira geral conforme NBR 8800. Portanto type1=3 não atingindo.
-  LAMBDA=BF/(2*TF)     
-  LAMBDAP=0.38*((YOUNG_MODULUS/FY)**0.5)  
-  LAMBDAR=(YOUNG_MODULUS/FY)**0.5   
+  LAMBDA = BF/(2*TF)     
+  LAMBDAP = 0.38*((YOUNG_MODULUS/FY)**0.5)  
+  LAMBDAR = (YOUNG_MODULUS/FY)**0.5   
   if LAMBDA <= LAMBDAP:
-    TYPE1=1    #"COMPACT SECTION"
+    TYPE1 = 1    #"COMPACT SECTION"
   elif LAMBDA>LAMBDAP and LAMBDA<=LAMBDAR:
-    TYPE1=2    #"NON COMPACT SECTION"
+    TYPE1 = 2    #"NON COMPACT SECTION"
   else:
-    TYPE1=3     #"SLENDER SECTION"
+    TYPE1 = 3     #"SLENDER SECTION"
   return (TYPE1)
 
 def WEB_LOCAL_BUCKLING(HW,TW,YOUNG_MODULUS,FY): #Flambagem local na alma FLB. Considerando aços de maneira geral conforme NBR 8800. Portanto type1=3 não atingindo.
-  LAMBDA=HW/TW    
-  LAMBDAP=3.76*((YOUNG_MODULUS/FY)**0.5)    
-  LAMBDAR=5.7*((YOUNG_MODULUS/FY)**0.5)   
-  if LAMBDA<=LAMBDAP:
-    TYPE2=4    #"COMPACT SECTION"
-  elif LAMBDA>LAMBDAP and LAMBDA<=LAMBDAR:
-    TYPE2=5    #"NON COMPACT SECTION"
+  LAMBDA = HW/TW    
+  LAMBDAP = 3.76*((YOUNG_MODULUS/FY)**0.5)    
+  LAMBDAR = 5.7*((YOUNG_MODULUS/FY)**0.5)   
+  if LAMBDA <= LAMBDAP:
+    TYPE2 = 4    #"COMPACT SECTION"
+  elif LAMBDA > LAMBDAP and LAMBDA <= LAMBDAR:
+    TYPE2 = 5    #"NON COMPACT SECTION"
   else:
-    TYPE2=6    #"SLENDER SECTION"
+    TYPE2 = 6    #"SLENDER SECTION"
   return (TYPE2)
   
 def SETION_DEFINITION(TYPE1,TYPE2): #type1=3 não atingindo. Portanto não está aqui.
-  if TYPE1==1 and TYPE2==4:
-    TYPE_BEAM=TYPE1 #Compact #1
+  if TYPE1 == 1 and TYPE2 == 4:
+    TYPE_BEAM = TYPE1 #Compact #1
     print("Compact")
-  elif TYPE1==2 and TYPE2==4: #2
+  elif TYPE1 == 2 and TYPE2 == 4: #2
     TYPE_BEAM=2 #Non compact due the flange
     print("Non compact due the flange")
-  elif TYPE1==1 and TYPE2==5: #5
+  elif TYPE1 == 1 and TYPE2 == 5: #5
     TYPE_BEAM=TYPE2  #Non Compact due web
     print("Non Compact due web")
-  elif TYPE1==2 and TYPE2==5: # 2 E 5, equal 7
-    TYPE_BEAM=7  #Non compact due the flange and web
+  elif TYPE1 == 2 and TYPE2 == 5: # 2 E 5, equal 7
+    TYPE_BEAM = 7  #Non compact due the flange and web
     print("Non compact due the flange and web")  
   return (TYPE_BEAM)
 
 def RESISTANT_DESIGN_MOMENT(TYPE_BEAM,GAMMAA1,FY,Z,REQUESTING_BENDING_MOMENT,BF,TF,E): 
-  if TYPE_BEAM ==1: #COMPACT 
-    momentoresistentciaplastico=Z*FY 
-    RESISTANT_DESIGN_MOMENT=momentoresistentciaplastico/(GAMMAA1*100)
+  if TYPE_BEAM == 1: #COMPACT 
+    momentoresistentciaplastico = Z*FY 
+    RESISTANT_DESIGN_MOMENT = momentoresistentciaplastico/(GAMMAA1*100)
     if REQUESTING_BENDING_MOMENT<RESISTANT_DESIGN_MOMENT: #profile check
       print("Mrs<Mrd")
     else:
       print("Change section.")
-  elif TYPE_BEAM==2:  #Non Compact due flange
-    LAMBDA=BF/2*TF    
-    LAMBDAP=0.38*((E/FY)**0.5)    
-    LAMBDAR=(E/FY)**0.5    
-    momentoresistentciaplastico=Z*fy
-    momentoresistenciaelastico=W*FY 
-    RESISTANT_DESIGN_MOMENT=(momentoresistentciaplastico-(momentoresistentciaplastico-0.7*momentoresistenciaelastico)*((LAMBDA-LAMBDAP)/(LAMBDAR-LAMBDAP)))/GAMMAA1
-    if REQUESTING_BENDING_MOMENT<RESISTANT_DESIGN_MOMENT: #profile check
+  elif TYPE_BEAM == 2:  #Non Compact due flange
+    LAMBDA = BF/2*TF    
+    LAMBDAP = 0.38*((E/FY)**0.5)    
+    LAMBDAR = (E/FY)**0.5    
+    momentoresistentciaplastico = Z*fy
+    momentoresistenciaelastico = W*FY 
+    RESISTANT_DESIGN_MOMENT = (momentoresistentciaplastico-(momentoresistentciaplastico-0.7*momentoresistenciaelastico)*((LAMBDA-LAMBDAP)/(LAMBDAR-LAMBDAP)))/GAMMAA1
+    if REQUESTING_BENDING_MOMENT < RESISTANT_DESIGN_MOMENT: #profile check
       print("Mrs<Mrd")
     else:
       print("Change section.")
-  elif TYPE_BEAM==5:  #Non Compact due web
-    LAMBDA=H/TW     
-    LAMBDAP=3.76*((E/FY)**0.5)    
-    LAMBDAR=5.7*((E/FY)**0.5)   
-    momentoresistentciaplastico=Z*FY 
-    momentoresistenciaelastico=W*FY 
-    RESISTANT_DESIGN_MOMENT=(momentoresistentciaplastico-(momentoresistentciaplastico-0.7*momentoresistenciaelastico)*((LAMBDA-LAMBDAP)/(LAMBDAR-LAMBDAP)))/GAMMAA1
-    if REQUESTING_BENDING_MOMENT<RESISTANT_DESIGN_MOMENT: #profile check
+  elif TYPE_BEAM == 5:  #Non Compact due web
+    LAMBDA = H/TW     
+    LAMBDAP = 3.76*((E/FY)**0.5)    
+    LAMBDAR = 5.7*((E/FY)**0.5)   
+    momentoresistentciaplastico = Z*FY 
+    momentoresistenciaelastico = W*FY 
+    RESISTANT_DESIGN_MOMENT = (momentoresistentciaplastico-(momentoresistentciaplastico-0.7*momentoresistenciaelastico)*((LAMBDA-LAMBDAP)/(LAMBDAR-LAMBDAP)))/GAMMAA1
+    if REQUESTING_BENDING_MOMENT < RESISTANT_DESIGN_MOMENT: #profile check
       print("Mrs<Mrd")
     else:
       print("Change section.")
-  elif TYPE_BEAM==7:  #Non compact due the flange and web
+  elif TYPE_BEAM == 7:  #Non compact due the flange and web
     print("Error")
   return (RESISTANT_DESIGN_MOMENT)
 
 def SECTIONS_CLASSIFICATION(HW,TW,YOUNG_MODULUS,FY):
-    LAMBDA=HW/TW     
-    LAMBDAP=2.46*((YOUNG_MODULUS/FY)**0.5)
-    LAMBDAR=3.06*((YOUNG_MODULUS/FY)**0.5)
+    LAMBDA = HW/TW     
+    LAMBDAP = 2.46*((YOUNG_MODULUS/FY)**0.5)
+    LAMBDAR = 3.06*((YOUNG_MODULUS/FY)**0.5)
     if LAMBDA <= LAMBDAP:
-      CV=1
+      CV = 1
       #print(f"CV={CV} ")
-    elif LAMBDAP<LAMBDA and LAMBDA<=LAMBDAR:
-      CV=(2.46/(HW/TW))*((YOUNG_MODULUS/FY)**0.5)
+    elif LAMBDAP<LAMBDA and LAMBDA <= LAMBDAR:
+      CV = (2.46/(HW/TW))*((YOUNG_MODULUS/FY)**0.5)
       #print(f"CV={CV} ")
-    elif LAMBDA>LAMBDAR:
-      CV=(7.5*YOUNG_MODULUS)/(FY*((HW/TW)**2))
+    elif LAMBDA > LAMBDAR:
+      CV = (7.5*YOUNG_MODULUS) / (FY*((HW/TW)**2))
       #print(f"CV={CV} ")
     return (CV)
 
 def RESISTANT_DESIGN_SHEAR(CV,FY,AW,GAMMAA1,REQUESTING_SHEAR_FORCE):
-  VRD=(CV*0.6*FY*AW)/(GAMMAA1)
-  if REQUESTING_SHEAR_FORCE<VRD:
+  VRD = (CV*0.6*FY*AW) / (GAMMAA1)
+  if REQUESTING_SHEAR_FORCE < VRD:
     print("Vrs<Vrd")
   else:
     print("Change section.")
